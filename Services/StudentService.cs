@@ -1,24 +1,31 @@
 ﻿using StudentAPI.Models;
+using StudentAPI.Data;
 namespace StudentAPI.Services
 
 {
     public class StudentService: IStudentService
     {
-        private List<Student> students = new List<Student>
+        
+        private readonly StudentDbContext _context;
+
+        public StudentService(StudentDbContext context)
         {
-            new Student { Id = 1, Name = "John Doe", Marks = 85 },
-            new Student { Id = 2, Name = "Jane Smith", Marks = 92 },
-            new Student { Id = 3, Name = "Alice Johnson", Marks = 78 }
-        };
+            _context = context;
+        }
 
         public List<Student> GetStudents()
         {
-            return students;
+            if (_context.Students != null)
+            {
+                return _context.Students.ToList();
+            }
+
+            return new List<Student>();
         }
 
         public Student? GetStudentById(int id)
         {
-            var stu = students.FirstOrDefault(stu => stu.Id == id);
+            var stu = _context.Students.FirstOrDefault(stu => stu.Id == id);
 
             return stu;
 
@@ -26,15 +33,15 @@ namespace StudentAPI.Services
 
         public Student AddStudent(Student student)
         {
-            student.Id = students.Max(s => s.Id) + 1;
-            students.Add(student);
+            _context.Students.Add(student);
+            _context.SaveChanges();
             return student;
         }
 
         public Student? UpdateStudent(int id, Student student)
         {
-            var existingStudent = students.FirstOrDefault(s => s.Id == id);
-            if(existingStudent == null)
+            var existingStudent = _context.Students.FirstOrDefault(s => s.Id == id);
+            if (existingStudent == null)
             {
                 //throw new Exception($"Student with Id {id} not found.");
                 return null;
@@ -44,21 +51,23 @@ namespace StudentAPI.Services
                 existingStudent.Name = student.Name;
                 existingStudent.Marks = student.Marks;
             }
-            
+
+            _context.SaveChanges();
 
             return existingStudent;
         }
 
         public Student? DeleteStudent(int id)
         {
-            var existingStudent = students.FirstOrDefault(s => s.Id == id);
+            var existingStudent = _context.Students.FirstOrDefault(s => s.Id == id);
             if (existingStudent == null)
             {
                 return null;
             }
             else
             {
-                students.Remove(existingStudent);
+                _context.Students.Remove(existingStudent);
+                _context.SaveChanges();
                 return existingStudent;
             }
         }

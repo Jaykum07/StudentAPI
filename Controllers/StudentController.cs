@@ -24,12 +24,13 @@ namespace StudentAPI.Controllers
 
             return Ok(students);
         }
+
         [HttpGet("{id}")]
         public IActionResult GetStudentById(int id)
         {
             var student = _studentService.GetStudentById(id);
 
-            if(student == null)
+            if (student == null)
             {
                 return NotFound();
             }
@@ -38,7 +39,7 @@ namespace StudentAPI.Controllers
         }
 
         [HttpPost]
-        public IActionResult addStudent(Student student)   
+        public IActionResult addStudent(Student student)
         {
 
 
@@ -51,7 +52,7 @@ namespace StudentAPI.Controllers
         [HttpPut("{id}")]
         public IActionResult UpdateById(int id, Student student)
         {
-            var stu = _studentService.UpdateStudent(id, student) ;
+            var stu = _studentService.UpdateStudent(id, student);
 
             if (stu == null) return NotFound();
 
@@ -64,8 +65,8 @@ namespace StudentAPI.Controllers
             var stu = _studentService.DeleteStudent(id);
 
             if (stu == null) return NotFound();
-           
-             return NoContent();
+
+            return NoContent();
         }
 
     }
