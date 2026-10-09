@@ -38,6 +38,19 @@ namespace StudentAPI.Controllers
             return Ok(student);
         }
 
+        [HttpGet("department/{departmentId}")]
+        public async Task<IActionResult> GetStudentsByDepartmentId(int departmentId)
+        {
+            var students = await _studentService.GetStudentsByDepartmentIdAsync(departmentId);
+
+            if(!students.Any())
+            {
+                return NotFound();
+            }
+
+            return Ok(students);
+        }
+
         [HttpPost]
         public IActionResult addStudent(Student student)
         {

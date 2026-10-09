@@ -8,6 +8,7 @@ namespace StudentAPI.Services
         Student AddStudent(Student student);
         Student? UpdateStudent(int id, Student student);
         Student? DeleteStudent(int id);
+        Task<List<Student>> GetStudentsByDepartmentIdAsync(int departmentId);
     }
 
 }

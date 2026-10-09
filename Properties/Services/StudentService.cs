@@ -1,5 +1,7 @@
 ﻿using StudentAPI.Models;
 using StudentAPI.Data;
+using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 namespace StudentAPI.Services
 
 {
@@ -43,7 +45,6 @@ namespace StudentAPI.Services
             var existingStudent = _context.Students.FirstOrDefault(s => s.Id == id);
             if (existingStudent == null)
             {
-                //throw new Exception($"Student with Id {id} not found.");
                 return null;
             }
             else
@@ -71,5 +72,14 @@ namespace StudentAPI.Services
                 return existingStudent;
             }
         }
+
+        public async Task<List<Student>> GetStudentsByDepartmentIdAsync(int departmentId)
+        {
+            var students = await _context.Students.Include(s => s.Department)
+                .Where(s => s.DepartmentId == departmentId)
+                .ToListAsync();
+            return students;
+        }
+
     }
 }
